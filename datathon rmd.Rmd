@@ -1,0 +1,35 @@
+---
+title: "Datathon Writeup"
+author: "Linda Cao, Georgie Stammer, Enzo Moraes Mescall"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document: 
+    fig_height: 4
+    fig_width: 6
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, 
+                      message = FALSE, 
+                      fig.align = "center")
+```
+
+```{r load-packages, echo = F}
+library(tidyverse)
+library(knitr)
+library(broom)
+library(patchwork)
+library(yardstick)
+library(ggfortify)
+library(viridis)
+```
+
+```{r}
+library(haven)
+Wave1_data <- read_sav("Wave1_20170906.sav")
+glimpse(Wave1_data)
+```
+
+```{r}
+wave_data_na <- Wave1_data
+```
