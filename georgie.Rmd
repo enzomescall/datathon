@@ -1,0 +1,40 @@
+---
+title: "georgie"
+author: "gstammer"
+date: "11/6/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-packages, echo = F}
+library(tidyverse)
+library(knitr)
+library(broom)
+library(patchwork)
+library(yardstick)
+```
+
+```{r}
+library(haven)
+Wave1_data <- read_sav("Wave1_20170906.sav")
+glimpse(Wave1_data)
+```
+
+```{r}
+data <-
+```
+
+
+```{r}
+Wave1_data %>%
+  mutate(religion = as.factor(se006)) %>%
+  ggplot(aes(x = country, fill = religion)) +
+  geom_bar(position = "stack")
+```
+
+
+
+
