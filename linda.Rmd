@@ -4,6 +4,7 @@ knitr::opts_chunk$set(warning = FALSE,
                       fig.align = "center")
 ```
 
+
 ```{r load-packages, echo = F}
 library(tidyverse)
 library(knitr)
@@ -16,63 +17,63 @@ library(naniar)
 
 ```{r}
 Wave1_data <- read_sav("Wave1_20170906.sav")
+Wave1_data$index <- 1:nrow(Wave1_data)
+
+predictors <- select(Wave1_data, c(country, level3:pgnum, index))
 ```
 
 ```{r}
-country_dist <- ggplot(data = Wave1_data, aes(x = q001)) +
-  geom_bar(fill = "lightblue", color = "black") +
-  labs(x = "Economic Condition of Respondent",
-       y = "Count",
-       title = "Distribution of Economic Condition by Country")
-
-country_dist
+p <- predictors %>% 
+  unite("se012b", se012bjp:se012bth, na.rm = TRUE)
 ```
-```{r}
-
-y <- Wave1_data %>%
-  select(q121:q144) %>%
-  mutate(average <- mean(Wave1_data, na.rm = TRUE))
-y
-```
-Questions to average 121-148
 
 ```{r}
 ideology_responses <- Wave1_data %>%
-  select(q121:q148, idnumber)
-  #select(q123, q124, q126:q146, q147a, q148)
-
-ideology_responses
-```
-```{r}
-ideology_responses[is.na(ideology_responses)] <- 100000
+  select(index, q121:q148)
 ```
 
 ```{r}
-ideology_responses_na <- ideology_responses %>%
+ideology_responses[is.na(ideology_responses)] <- 100000000
+```
+
+```{r}
+na_sum <- ideology_responses %>%
   mutate(sum = rowSums(ideology_responses[])) %>%
-  filter(sum <299999)
+  filter(sum <299999999)
 
-ideology_filtered <- select(ideology_responses_na, q121:q148, idnumber)
+na_sum[na_sum > 100000] <- NA
+
+na_sum$avg <- rowMeans(subset(na_sum, select = c(q121:q148)), na.rm = TRUE)
+
+average_ideology <- select(na_sum, c(index, avg))
 ```
 
 ```{r}
-x <- merge(ideology_filtered, Wave1_data, by = "idnumber")
-x
+clean_data <- inner_join(average_ideology, predictors, by = "index")
 ```
 
-for row in ideology_repsonses:
-  if sum of entries in row > 4000:
-      remove row
+### Exploratory Data Analysis
 
+```{r}
+clean_data
+```
 
+### Mutate predictors
+```{r country}
+clean_data1 <- clean_data %>%
+  mutate(country = as.factor(country)) 
+levels(clean_data1$country) <- c("Japan", "Hong Kong", "Korea", "China",
+                          "Mongolia", "Philippines", "Taiwan", "Thailand")
 
+```
 
-for row in ideology_repsonses:
-  if sum of entries in row > 4000:
-      remove row
-
+```{r gender}
+```
 
 
 ```{r}
-ggplot(data = x, aes(x = country)) + geom_histogram()
+model <- lm(avg ~ country, clean_data1) %>%
+  tidy() %>%
+  kable(digits = 3)
+model
 ```
