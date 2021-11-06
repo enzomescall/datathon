@@ -25,9 +25,11 @@ library(yardstick)
 
 #### Introduction
 
-Our group was interested in section P of the questionnaire where individuals were asked a series of political questions and responded with their opinions. The data set provides information about the material conditions, and their perceived material conditions, of the surveyed and thus allows us to attempt to 
+Our group was interested in section P of the questionnaire where individuals were asked a series of political questions and responded with their opinions. The data set provides information about the material conditions, and their perceived material conditions, of the surveyed and thus allows us to attempt to estimate the impact of an individual's material conditions on their political leanings. Notably, all the questions in section P are on a scale of 1 - 4 where answering 1 indicates support of a larger authoritarian government while answering 4 
 
 #### Exploratory Data Analysis
+
+
 
 #### Methodology
 
