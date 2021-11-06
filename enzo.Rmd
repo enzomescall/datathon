@@ -16,7 +16,6 @@ library(naniar)
 
 ```{r}
 Wave1_data <- read_sav("Wave1_20170906.sav")
-glimpse(Wave1_data)
 ```
 
 ```{r}
@@ -25,8 +24,6 @@ country_dist <- ggplot(data = Wave1_data, aes(x = q001, fill = as.factor(country
   labs(x = "Economic Condition of Respondent",
        y = "Count",
        title = "Distribution of Economic Condition by Country")
-
-country_dist
 ```
 
 Questions to average 121-148
@@ -43,12 +40,11 @@ ideology_responses[is.na(ideology_responses)] <- 100000
 ```
 
 ```{r}
-ideology_responses1 <- ideology_responses %>%
+ideology_responses_na <- ideology_responses %>%
   mutate(sum = rowSums(ideology_responses[])) %>%
   filter(sum <299999)
 
-ggplot(data = ideology_responses1, aes(x = sum)) +
-  geom_histogram(fill = "lightblue", color = "black")
+ideology_filtered <- select(ideology_responses_na, q121:q148)
 ```
 
 
