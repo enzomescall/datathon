@@ -98,6 +98,13 @@ average_ideology <- select(na_sum, c(index, avg))
 clean_data <- inner_join(average_ideology, predictors, by = "index")
 ```
 
+```{r simplifying religion}
+clean_religion <- clean_data %>%
+  mutate(religion = case_when(se006 == 11 ~ 0,
+                            se006 < 11 ~ 1))
+```
+
+
 
 
 ```{r plot ideologies}
