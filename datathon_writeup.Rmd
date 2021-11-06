@@ -19,12 +19,21 @@ library(tidyverse)
 library(knitr)
 library(broom)
 library(patchwork)
+library(haven)
 library(yardstick)
 ```
 
 ```{r}
-library(haven)
 Wave1_data <- read_sav("Wave1_20170906.sav")
-glimpse(Wave1_data)
+```
+
+```{r}
+country_dist <- ggplot(data = Wave1_data, aes(x = q001)) +
+  geom_bar(fill = "lightblue", color = "black") +
+  labs(x = "Economic Condition of Respondent",
+       y = "Count",
+       title = "Distribution of Economic Condition by Country")
+
+country_dist
 ```
 
