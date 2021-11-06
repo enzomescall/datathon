@@ -42,15 +42,11 @@ na_sum <- ideology_responses %>%
   mutate(sum = rowSums(ideology_responses[])) %>%
   filter(sum <299999999)
 
-#na_sum[na_sum > 100000] <- NA
-```
+na_sum[na_sum > 100000] <- NA
 
-```{r}
-calc_avg <- na_sum %>%
-  rowwise() %>%
-  mutate(avg = mean(c(q121,q148)))
+na_sum$avg <- rowMeans(subset(na_sum, select = c(q121:q148)), na.rm = TRUE)
 
-average_ideology <- select(calc_avg, c(index, avg))
+average_ideology <- select(na_sum, c(index, avg))
 ```
 
 ```{r}
