@@ -18,11 +18,13 @@ knitr::opts_chunk$set(warning = FALSE,
 library(tidyverse)
 library(knitr)
 library(broom)
+library(patchwork)
+library(yardstick)
 ```
 
 ```{r}
 library(haven)
-Wave1_20170906 <- read_sav("Wave1_20170906.sav")
-View(Wave1_20170906)
+Wave1_data <- read_sav("Wave1_20170906.sav")
+glimpse(Wave1_data)
 ```
 
