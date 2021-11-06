@@ -42,6 +42,6 @@ average_ideology <- select(na_sum, c(index, avg))
 ```
 
 ```{r}
-
+clean_data <- inner_join(average_ideology, predictors, by = "index")
 ```
 
