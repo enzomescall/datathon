@@ -28,11 +28,12 @@ data <- Wave1_data %>%
   mutate(country = as.factor(country)) %>%
   mutate(religion = as.factor(se006))
 
-levels(data$country) <- c("Japan", "Hong Kong", "Taiwan", "Korea", "Thailand",
-                          "Philippines", "China", "Indonesia")
-levels(data$religion) <- c("Roman Catholic", "Protestant", "Jews", "Islam",
-                           "Hindu", "Buddhist", "Other", "Iglesia Ni Cristo",
-                           "Aglipayan", "Born Again", "None")
+levels(data$country) <- c("Japan", "Hong Kong", "Korea", "China",
+                          "Mongolia", "Philippines", "Taiwan", "Thailand")
+levels(data$religion) <- c("Shinto", "Daoism", "Other Folk Religions",
+                           "Born Again",
+                           "Buddhism", "Hinduism", "Islam", "Roman Catholics",
+                           "Protestantism", "Others", "None")
 ```
 
 
