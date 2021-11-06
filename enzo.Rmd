@@ -15,15 +15,25 @@ library(yardstick)
 
 ```{r}
 Wave1_data <- read_sav("Wave1_20170906.sav")
+glimpse(Wave1_data)
 ```
 
 ```{r}
-country_dist <- ggplot(data = Wave1_data, aes(x = q001)) +
-  geom_bar(fill = "lightblue", color = "black") +
+country_dist <- ggplot(data = Wave1_data, aes(x = q001, fill = as.factor(country))) +
+  geom_bar(condition = "fill", fill = "lightblue", color = "black") +
   labs(x = "Economic Condition of Respondent",
        y = "Count",
        title = "Distribution of Economic Condition by Country")
 
 country_dist
+```
+
+Questions to average 
+
+```{r}
+ideology_responses <- Wave1_data %>%
+  select(q123, q124, q126:q146, q147a, q148)
+
+glimpse(ideology_reesponses)
 ```
 
