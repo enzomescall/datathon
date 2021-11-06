@@ -15,6 +15,7 @@ library(yardstick)
 
 ```{r}
 Wave1_data <- read_sav("Wave1_20170906.sav")
+Wave1_data$index <- 1:nrow(Wave1_data)
 ```
 
 ```{r}
@@ -31,16 +32,25 @@ Questions to average 121-148
 ideology_responses <- Wave1_data %>%
   select(idnumber, q121:q148)
 ```
+
 ```{r}
-ideology_responses[is.na(ideology_responses)] <- 100000
+ideology_responses[is.na(ideology_responses)] <- 100000000
 ```
 
 ```{r}
-ideology_responses_na <- ideology_responses %>%
+na_sum <- ideology_responses %>%
   mutate(sum = rowSums(ideology_responses[])) %>%
-  filter(sum <299999)
+  filter(sum <299999999)
 
-ideology_filtered <- select(ideology_responses_na, c(idnumber, q121:q148))
+#na_sum[na_sum > 100000] <- NA
+```
+
+```{r}
+calc_avg <- na_sum %>%
+  rowwise() %>%
+  mutate(avg = mean(c(q121,q148)))
+
+average_ideology <- select(calc_avg, c(idnumber, avg))
 ```
 
 
