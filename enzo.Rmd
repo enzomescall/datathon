@@ -11,6 +11,7 @@ library(broom)
 library(patchwork)
 library(haven)
 library(yardstick)
+library(naniar)
 ```
 
 ```{r}
@@ -28,12 +29,24 @@ country_dist <- ggplot(data = Wave1_data, aes(x = q001, fill = as.factor(country
 country_dist
 ```
 
-Questions to average 
+Questions to average 121-148
 
 ```{r}
 ideology_responses <- Wave1_data %>%
-  select(q123, q124, q126:q146, q147a, q148)
+  select(q121:q148)
+  #select(q123, q124, q126:q146, q147a, q148)
 
-glimpse(ideology_reesponses)
+gg_miss_var(ideology_responses)
 ```
+```{r}
+ideology_responses[is.na(ideology_responses)] <- 1000
+
+
+glimpse(ideology_responses)
+```
+
+
+for row in ideology_repsonses:
+  if sum of entries in row > 4000:
+      remove row
 
