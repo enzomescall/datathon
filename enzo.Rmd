@@ -11,6 +11,7 @@ library(broom)
 library(patchwork)
 library(haven)
 library(yardstick)
+library(naniar)
 ```
 
 ```{r}
@@ -18,6 +19,11 @@ Wave1_data <- read_sav("Wave1_20170906.sav")
 Wave1_data$index <- 1:nrow(Wave1_data)
 
 predictors <- select(Wave1_data, c(country, level3:pgnum, index))
+```
+
+```{r}
+p <- predictors %>% 
+  unite("se012b", se012bjp:se012bth, na.rm = TRUE)
 ```
 
 ```{r}
@@ -43,5 +49,11 @@ average_ideology <- select(na_sum, c(index, avg))
 
 ```{r}
 clean_data <- inner_join(average_ideology, predictors, by = "index")
+```
+
+### Exploratory Data Analysis
+
+```{r}
+gg_miss_var(clean_data)
 ```
 
