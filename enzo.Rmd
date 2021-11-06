@@ -46,6 +46,11 @@ average_ideology <- select(na_sum, c(index, avg))
 clean_data <- inner_join(average_ideology, predictors, by = "index")
 ```
 
+```{r}
+gg_miss_var(clean_data)
+```
+
+
 ### Mutate predictors
 
 ```{r}
@@ -55,38 +60,35 @@ final_data$marital_status <- clean_data$se004a - 1
 final_data$urban_rural <- clean_data$level3 - 1
 final_data$age <- clean_data$se003a
 final_data$education <- clean_data$se005a
+final_data$household_members <- clean_data$se008a
+final_data$household_generations <- clean_data$se008b
+final_data$subjective_status <- clean_data$se017
+final_data$religios <- clean_data %>%
+  mutate(religion = case_when(se006 == 11 ~ 0, se006 < 11 ~ 1))
+
+#missing: country, annual income quintiles, main occupation
 ```
 
 
-```{r country}
-clean_data1 <- clean_data %>%
-  mutate()
-  mutate(case_when(country == 1 ~"Japan", country == 2 ~ "Hong Kong", country == 3 ~ "Korea", country == 4 ~ "China", country == 5 ~ "Mongolia", country == 6 ~ "Philippines", country == 7 ~ "Taiwan", country == 8 ~ "Thailand")) %>% 
+```{r}
+final_data <- clean_data %>%
+  mutate(country = as.factor(country)) %>%
   mutate(urban_rural = as.factor(level3)) %>%
   mutate(gender = as.factor(se002 - 1)) %>%
   mutate(age = se003a) %>%
   mutate(marital_status = se004a - 1) %>%
   mutate(education = se005a) %>%
-  mutate(religion = as.factor(se006)) %>%
-  mutate(case_when(se006 == 1 ~"Shinto", se006 == 2 ~ "Daoism", se006 == 3 ~ "Other Folk Religions", se006 == 4 ~ "Born Again", se006 == 5 ~ "Buddhism", se006 == 6 ~ "Hinduism", se006 == 7 ~ "Islam", se006 == 8 ~ "Roman Catholics", se006 == 9 ~ "Protestantism", se006 == 10 ~ "Others", se006 == 11 ~ "None")) 
-```
-```{r}
-clean_data1 %>%
-  count(country)
-```
+  mutate(household_members = se008a) %>%
+  mutate(household_generations = se008b) %>%
+  mutate(subjective_status = se017) %>%
+  mutate(religion = case_when(se006 == 11 ~ 0, se006 < 11 ~ 1))
 
-```{r}
-clean_data1 <- clean_data %>%
-  mutate(religion = as.character(se006)) %>%
-  mutate(religion = factor(se006, levels = c("Shinto", "Daoism", "Other Folk Religions",
-                           "Born Again",
-                           "Buddhism", "Hinduism", "Islam", "Roman Catholics",
-                           "Protestantism", "Others", "None")))
-
+levels(clean_data1$country) <- c("Japan", "Hong Kong", "Korea", "China",
+                          "Mongolia", "Philippines", "Taiwan", "Thailand")
 ```
 
 ```{r model}
-model <- lm(avg ~ gender + marital_status + age + education + urban_rural, final_data) %>%
+model <- lm(avg ~ country + gender + marital_status + urban_rural + age + education + household_members + household_generations + subjective_status, final_data) %>%
   tidy() %>%
   kable(digits = 3)
 model
