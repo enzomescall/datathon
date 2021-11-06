@@ -30,7 +30,7 @@ Questions to average 121-148
 
 ```{r}
 ideology_responses <- Wave1_data %>%
-  select(idnumber, q121:q148)
+  select(index, q121:q148)
 ```
 
 ```{r}
@@ -50,7 +50,11 @@ calc_avg <- na_sum %>%
   rowwise() %>%
   mutate(avg = mean(c(q121,q148)))
 
-average_ideology <- select(calc_avg, c(idnumber, avg))
+average_ideology <- select(calc_avg, c(index, avg))
+```
+
+```{r}
+max(average_ideology$avg)
 ```
 
 
