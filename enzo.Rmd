@@ -39,10 +39,16 @@ ideology_responses <- Wave1_data %>%
 gg_miss_var(ideology_responses)
 ```
 ```{r}
-ideology_responses[is.na(ideology_responses)] <- 1000
+ideology_responses[is.na(ideology_responses)] <- 100000
+```
 
+```{r}
+ideology_responses1 <- ideology_responses %>%
+  mutate(sum = rowSums(ideology_responses[])) %>%
+  filter(sum <299999)
 
-glimpse(ideology_responses)
+ggplot(data = ideology_responses1, aes(x = sum)) +
+  geom_histogram(fill = "lightblue", color = "black")
 ```
 
 
