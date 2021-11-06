@@ -26,4 +26,10 @@ country_dist <- ggplot(data = Wave1_data, aes(x = q001)) +
 
 country_dist
 ```
+```{r}
 
+y <- Wave1_data %>%
+  select(q121:q144) %>%
+  mutate(average <- rowMeans(Wave1_data, na.rm = TRUE))
+y
+```
