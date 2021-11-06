@@ -26,7 +26,8 @@ Wave1_data <- read_sav("Wave1_20170906.sav")
 ```{r}
 data <- Wave1_data %>%
   mutate(country = as.factor(country)) %>%
-  mutate(religion = as.factor(se006))
+  mutate(religion = as.factor(se006)) %>%
+  mutate(gender = as.factor(se002))
 
 levels(data$country) <- c("Japan", "Hong Kong", "Korea", "China",
                           "Mongolia", "Philippines", "Taiwan", "Thailand")
@@ -34,6 +35,7 @@ levels(data$religion) <- c("Shinto", "Daoism", "Other Folk Religions",
                            "Born Again",
                            "Buddhism", "Hinduism", "Islam", "Roman Catholics",
                            "Protestantism", "Others", "None")
+levels(data$gender) <- c("Male", "Female")
 ```
 
 
@@ -44,11 +46,107 @@ data %>%
 ```
 
 ```{r}
+data %>%
+  ggplot(aes(x = country, fill = gender)) +
+  geom_bar(position = "fill")
+
+data %>%
+  ggplot(aes(x = religion, fill = gender)) +
+  geom_bar(position = "dodge")
+```
+
+
+```{r}
 religions <- Wave1_data %>%
   select(country, se006) %>%
   group_by(country, se006) %>%
   count()
 ```
+
+
+Enzo data
+
+```{r}
+Wave1_data <- read_sav("Wave1_20170906.sav")
+Wave1_data$index <- 1:nrow(Wave1_data)
+
+predictors <- select(Wave1_data, c(country, level3, se002:pgnum, index))
+```
+
+```{r}
+ideology_responses <- Wave1_data %>%
+  select(index, q121:q148)
+```
+
+```{r}
+ideology_responses[is.na(ideology_responses)] <- 100000000
+```
+
+```{r}
+na_sum <- ideology_responses %>%
+  mutate(sum = rowSums(ideology_responses[])) %>%
+  filter(sum <299999999)
+
+na_sum[na_sum > 100000] <- NA
+
+na_sum$avg <- rowMeans(subset(na_sum, select = c(q121:q148)), na.rm = TRUE)
+
+average_ideology <- select(na_sum, c(index, avg))
+```
+
+```{r}
+clean_data <- inner_join(average_ideology, predictors, by = "index")
+```
+
+
+
+```{r plot ideologies}
+#religion vs avg
+clean_data %>%
+  ggplot(aes(x = as.factor(se006), y = avg)) +
+  geom_violin()
+
+#gender vs avg
+clean_data %>%
+  ggplot(aes(x = as.factor(se002), y = avg)) +
+  geom_violin()
+
+#country vs avg
+clean_data %>%
+  ggplot(aes(x = as.factor(country), y = avg)) +
+  geom_violin()
+
+#age vs avg
+clean_data %>%
+  ggplot(aes(x = as.factor(se003a), y = avg)) +
+  geom_violin()
+
+#marital vs avg
+clean_data %>%
+  ggplot(aes(x = as.factor(se004a), y = avg)) +
+  geom_violin()
+
+#income vs avg
+clean_data %>%
+  ggplot(aes(x = as.factor(se009), y = avg)) +
+  geom_violin()
+
+#job vs avg
+clean_data %>%
+  ggplot(aes(x = as.factor(se012a), y = avg)) +
+  geom_violin()
+
+#urban/rural vs avg
+clean_data %>%
+  ggplot(aes(x = as.factor(level3), y = avg)) +
+  geom_violin()
+
+#education vs avg
+clean_data %>%
+  ggplot(aes(x = as.factor(se005a), y = avg)) +
+  geom_jitter(alpha = 0.2)
+```
+
 
 
 
