@@ -15,26 +15,39 @@ library(knitr)
 library(broom)
 library(patchwork)
 library(yardstick)
+library(labelled)
 ```
 
 ```{r}
 library(haven)
 Wave1_data <- read_sav("Wave1_20170906.sav")
-glimpse(Wave1_data)
 ```
 
 ```{r}
-data <-
+data <- Wave1_data %>%
+  mutate(country = as.factor(country)) %>%
+  mutate(religion = as.factor(se006))
+
+levels(data$country) <- c("Japan", "Hong Kong", "Taiwan", "Korea", "Thailand",
+                          "Philippines", "China", "Indonesia")
+levels(data$religion) <- c("Roman Catholic", "Protestant", "Jews", "Islam",
+                           "Hindu", "Buddhist", "Other", "Iglesia Ni Cristo",
+                           "Aglipayan", "Born Again", "None")
 ```
 
 
 ```{r}
-Wave1_data %>%
-  mutate(religion = as.factor(se006)) %>%
+data %>%
   ggplot(aes(x = country, fill = religion)) +
-  geom_bar(position = "stack")
+  geom_bar(position = "fill")
 ```
 
+```{r}
+religions <- Wave1_data %>%
+  select(country, se006) %>%
+  group_by(country, se006) %>%
+  count()
+```
 
 
 
