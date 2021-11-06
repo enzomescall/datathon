@@ -55,25 +55,71 @@ clean_data <- inner_join(average_ideology, predictors, by = "index")
 ### Exploratory Data Analysis
 
 ```{r}
-clean_data
+clean_data 
 ```
 
 ### Mutate predictors
+```{r}
+clean_data$
+```
 ```{r country}
 clean_data1 <- clean_data %>%
-  mutate(country = as.factor(country)) 
-levels(clean_data1$country) <- c("Japan", "Hong Kong", "Korea", "China",
-                          "Mongolia", "Philippines", "Taiwan", "Thailand")
-
+  mutate()
+  mutate(case_when(country == 1 ~"Japan", country == 2 ~ "Hong Kong", country == 3 ~ "Korea", country == 4 ~ "China", country == 5 ~ "Mongolia", country == 6 ~ "Philippines", country == 7 ~ "Taiwan", country == 8 ~ "Thailand")) %>% 
+  mutate(urban_rural = as.factor(level3)) %>%
+  mutate(gender = as.factor(se002 - 1)) %>%
+  mutate(age = se003a) %>%
+  mutate(marital_status = se004a - 1) %>%
+  mutate(education = se005a) %>%
+  mutate(religion = as.factor(se006)) %>%
+  mutate(case_when(se006 == 1 ~"Shinto", se006 == 2 ~ "Daoism", se006 == 3 ~ "Other Folk Religions", se006 == 4 ~ "Born Again", se006 == 5 ~ "Buddhism", se006 == 6 ~ "Hinduism", se006 == 7 ~ "Islam", se006 == 8 ~ "Roman Catholics", se006 == 9 ~ "Protestantism", se006 == 10 ~ "Others", se006 == 11 ~ "None")) 
+```
+```{r}
+clean_data1 %>%
+  count(country)
+```
+```{r urban rural}
+clean_data1$urban_rural <- clean_data$ %>%
+  mutate(urban_rural = as.factor(level3))
 ```
 
 ```{r gender}
+clean_data1 <- clean_data %>%
+  mutate(gender = as.factor(se002 - 1))
 ```
 
+```{r age} 
+clean_data1 <- clean_data %>%
+  mutate(age = se003a)
+```
+
+```{r marital status}
+clean_data1 <- clean_data %>%
+  mutate(marital_status = se004a - 1)
+```
+
+```{r education}
+clean_data1 <- clean_data %>%
+  mutate(education = se005a)
+```
 
 ```{r}
-model <- lm(avg ~ country, clean_data1) %>%
+clean_data1 <- clean_data %>%
+  mutate(religion = as.character(se006)) %>%
+  mutate(religion = factor(se006, levels = c("Shinto", "Daoism", "Other Folk Religions",
+                           "Born Again",
+                           "Buddhism", "Hinduism", "Islam", "Roman Catholics",
+                           "Protestantism", "Others", "None")))
+
+```
+
+```{r model}
+model <- lm(avg ~ country + gender + age + marital_status + urban_rural + education + religion, clean_data1) %>%
   tidy() %>%
   kable(digits = 3)
 model
+```
+```{r}
+clean_data1 %>%
+  count(country)
 ```
