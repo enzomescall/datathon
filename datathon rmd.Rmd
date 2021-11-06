@@ -19,3 +19,10 @@ library(tidyverse)
 library(knitr)
 library(broom)
 ```
+
+```{r}
+library(haven)
+Wave1_20170906 <- read_sav("Wave1_20170906.sav")
+View(Wave1_20170906)
+```
+
