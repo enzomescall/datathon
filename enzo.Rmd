@@ -18,12 +18,7 @@ library(naniar)
 Wave1_data <- read_sav("Wave1_20170906.sav")
 Wave1_data$index <- 1:nrow(Wave1_data)
 
-predictors <- select(Wave1_data, c(country, level3:pgnum, index))
-```
-
-```{r}
-p <- predictors %>% 
-  unite("se012b", se012bjp:se012bth, na.rm = TRUE)
+predictors <- select(Wave1_data, c(country, level3, se002:pgnum, index))
 ```
 
 ```{r}
