@@ -23,17 +23,14 @@ library(haven)
 library(yardstick)
 ```
 
-```{r}
-Wave1_data <- read_sav("Wave1_20170906.sav")
-```
+#### Introduction
 
-```{r}
-country_dist <- ggplot(data = Wave1_data, aes(x = q001)) +
-  geom_bar(fill = "lightblue", color = "black") +
-  labs(x = "Economic Condition of Respondent",
-       y = "Count",
-       title = "Distribution of Economic Condition by Country")
+Our group was interested in section P of the questionnaire where individuals were asked a series of political questions and responded with their opinions. The data set provides information about the material conditions, and their perceived material conditions, of the surveyed and thus allows us to attempt to 
 
-country_dist
-```
+#### Exploratory Data Analysis
 
+#### Methodology
+
+#### Data Analysis
+
+#### Conclusion
