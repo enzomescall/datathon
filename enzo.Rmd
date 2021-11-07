@@ -85,6 +85,4 @@ backward_select_AIC %>%
   tidy() %>%
   kable(digits = 3)
 ```
-```{}
 
-```
