@@ -138,9 +138,6 @@ The distribution is unimodal, looks vaguely normal and doesn't have any apparent
 
 After cleaning up the data we created a linear model using the responses to questions SE001 through SE017 and then selected the most relevant predictor variables to keep in the model based off of their p-values with the threshold being $p > 0.1$.
 
-<<<<<<< HEAD
-### Data Analysis
-=======
 ```{r model}
 model <- lm(avg ~ country + gender + education, data = final_data) %>%
   tidy(conf.int = TRUE) %>%
@@ -153,17 +150,8 @@ Which we may represent in the equation:
 $$ \hat{PolIndex} = 2.767 - 0.296 ~ countryHK ~ - 0.204 ~ countryKO - 0.473 ~ countryCN ~ - 0.430 ~countryMN ~ $$
 $$ - 0.327 ~ countryPH ~ - 0.268 ~ countryTW ~ - 0.014 ~ gender + 0.016 ~ education ~ + \epsilon_i, \hspace{10mm} \epsilon \sim N(, \sigma^2_{\epsilon})$$
 
-The y-intercept represents a female individual from Japan with 0 years of formal education. All the countries are indicator variables and these carry the most weight on the response variable. Gender is also categorical but having a small impact of only a -0.014 difference in male political indices, on average and holding all other variables constant. The only numerical is years of education where, on average, for every additional year of education we would expect an individual's political index to raise by 0.017, holding all other variables constant.
+The y-intercept represents a male individual from Japan with 0 years of formal education. All the countries are indicator variables and these carry the most weight on the response variable. Given that zero is not included in any of the countries' confidence intervals, we are 95% confident that the average political index for each country is not the same. Gender is also categorical but having a small impact of only a -0.014 difference in female political indices and we are 95% confident that the political index for males differs from -0.028	to -0.001 compared to females, holding all other predictor variables constant. The only numerical is years of education where we are 95% confident that for every additional year in education, the respondent's political index increases by 0.015 to 0.019, holding all other predictor variables constant. 
 
 ### Conclusion
->>>>>>> cf9706b59bc9b02b5d2f07d42c19192ca3d436b8
 
 These findings would match our intuition about education where increasing years of schooling dissuades authoritarian ideology. Another point to consider is that belonging to countries generally associated to authoritarian regimes, like the PRC, Mongolia and Thailand, generally have a much greater negative effect on an individual's political ideology
-
-<<<<<<< HEAD
-### Conclusion
-
-
-=======
-ANOVA conclusion analysis
->>>>>>> cf9706b59bc9b02b5d2f07d42c19192ca3d436b8
