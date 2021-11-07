@@ -33,7 +33,7 @@ ideology_responses[is.na(ideology_responses)] <- 100000000
 ```{r}
 na_sum <- ideology_responses %>%
   mutate(sum = rowSums(ideology_responses[])) %>%
-  filter(sum <299999999)
+  filter(sum <499999999)
 
 na_sum[na_sum > 100000] <- NA
 
@@ -50,46 +50,39 @@ clean_data <- inner_join(average_ideology, predictors, by = "index")
 gg_miss_var(clean_data)
 ```
 
-
 ### Mutate predictors
-
-```{r}
-final_data <- clean_data
-final_data$gender <- clean_data$se002 - 1
-final_data$marital_status <- clean_data$se004a - 1
-final_data$urban_rural <- clean_data$level3 - 1
-final_data$age <- clean_data$se003a
-final_data$education <- clean_data$se005a
-final_data$household_members <- clean_data$se008a
-final_data$household_generations <- clean_data$se008b
-final_data$subjective_status <- clean_data$se017
-final_data$religios <- clean_data %>%
-  mutate(religion = case_when(se006 == 11 ~ 0, se006 < 11 ~ 1))
-
-#missing: country, annual income quintiles, main occupation
-```
-
 
 ```{r}
 final_data <- clean_data %>%
   mutate(country = as.factor(country)) %>%
-  mutate(urban_rural = as.factor(level3)) %>%
+  mutate(urban_rural = as.factor(level3 - 1)) %>%
   mutate(gender = as.factor(se002 - 1)) %>%
   mutate(age = se003a) %>%
-  mutate(marital_status = se004a - 1) %>%
+  mutate(marital_status = as.factor(se004a - 1)) %>%
   mutate(education = se005a) %>%
   mutate(household_members = se008a) %>%
   mutate(household_generations = se008b) %>%
   mutate(subjective_status = se017) %>%
   mutate(religion = case_when(se006 == 11 ~ 0, se006 < 11 ~ 1))
 
-levels(clean_data1$country) <- c("Japan", "Hong Kong", "Korea", "China",
+levels(final_data$country) <- c("Japan", "Hong Kong", "Korea", "China",
                           "Mongolia", "Philippines", "Taiwan", "Thailand")
 ```
 
 ```{r model}
-model <- lm(avg ~ country + gender + marital_status + urban_rural + age + education + household_members + household_generations + subjective_status, final_data) %>%
+model <- lm(avg ~ country + gender + marital_status + urban_rural + education + household_members + household_generations + subjective_status, data = final_data) %>%
   tidy() %>%
   kable(digits = 3)
 model
 ```
+
+```{r kable backward}
+int_only <- lm(avg ~ 1, data = final_data)
+
+forward_select_BIC <- step(int_only, scope = formula(model), direction = "forward", k = log(nrow(final_data)))
+
+backward_select_AIC %>%
+  tidy() %>%
+  kable(digits = 3)
+```
+
