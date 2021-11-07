@@ -62,8 +62,8 @@ clean_data <- inner_join(average_ideology, predictors, by = "index")
 ```{r organise-clean-data, include= FALSE}
 final_data <- clean_data %>%
   mutate(country = as.factor(country)) %>%
-  mutate(urban_rural = as.factor(level3 - 1)) %>%
-  mutate(gender = as.factor(se002 - 1)) %>%
+  mutate(urban_rural = level3 - 1) %>%
+  mutate(gender = se002 - 1) %>%
   mutate(age = se003a) %>%
   mutate(marital_status = as.factor(se004a - 1)) %>%
   mutate(education = se005a) %>%
@@ -78,22 +78,23 @@ levels(final_data$country) <- c("Japan", "Hong Kong", "Korea", "China",
 
 ### Introduction
 
-Immediately after going over the data set our group was interested in section P of the questionnaire where individuals were asked a series of intense political questions and responded with their opinions. This provides a unique subjective insight of a population's perspective on their civic space. The data set provides information about the material conditions, and their perceived material conditions, of the surveyed and thus allows us to attempt to estimate the impact of an individual's material conditions on their political leanings. Notably, all the questions in section P are on a scale of 1 - 4 where answering 1 indicates support of a larger authoritarian government while answering 4.
+Immediately after going over the data set our group was interested in section P of the questionnaire where individuals were asked a series of intense political questions and responded with their opinions. This provides a unique subjective insight of a population's perspective on their civic space. The data set provides information about the material conditions, and their perceived material conditions, of the surveyed and thus allows us to attempt to estimate the impact of an individual's material conditions on their political leanings. Notably, all the questions in section P are on a scale of 1 - 4 where answering 1 indicates support of a larger authoritarian government while answering 4 indicates support for a more democratic form of government.
 
 #### Research Question
 
-To what extent do an individual's material conditions affect their leanings toward authoritarian form of government?
-
+*To what extent do an individual's material conditions affect their leanings toward authoritarian form of government?*
 
 ### Methodology
 
-To measure an individual's political leanings based off of their answers from the questionnaire we took their responses from questions Q121 to Q148 which scale from 1 to 4 and took the arithmetic mean across selected questions.
+To measure an individual's political leanings based off of their answers from the questionnaire we took their responses from questions Q121 to Q148 which scale from 1 to 4 and took the arithmetic mean across selected questions, which we refer to as the political index.
 
 //space for erik
-```{r correlation}
-corr_ideology <- cor(cleaned_ideology, method = c("spearman"), use = "complete.obs")
 
-ggcorrplot(corr_ideology, ggtheme = theme_bw(), tl.cex = 8,
+```{r, include = FALSE}
+corr_ideology <- cor(cleaned_ideology, method = c("spearman"), use = "complete.obs")
+```
+```{r correlation}
+ggcorrplot(corr_ideology, ggtheme = theme_bw(), tl.cex = 6,
            colors = c("#ebbb2a", "white", "#208756")) +
   labs(title = "Correlation between questions")
 ```
@@ -122,11 +123,26 @@ kable(learning_index, digits = 3,
 
 The distribution is unimodal, looks vaguely normal and doesn't have any apparent outliers.
 
-
-
-
 ### Data Analysis
 
-After cleaning up the data we created a linear model using the responses to questions SE001 through SE017
+After cleaning up the data we created a linear model using the responses to questions SE001 through SE017 and then selected the most relevant predictor variables to keep in the model based off of their p-values with the threshold being $p > 0.1$.
+
+```{r model}
+model <- lm(avg ~ country + gender + education, data = final_data) %>%
+  tidy(conf.int = TRUE) %>%
+  kable(digits = 3, title = "Linear Regression Model for Political Index")
+model
+```
+
+Which we may represent in the equation:
+
+$$\hat{PolIndex} = 2.767 - 0.296 ~ countryHK ~ - 0.204 ~ countryKO - 0.473 ~ countryCN ~ - 0.430 ~countryMN ~ $$
+$$- 0.327 ~ countryPH ~ - 0.268 ~ countryTW ~ - 0.014 ~ gender + 0.016 ~ education ~ + \epsilon_i, \hspace{10mm} \epsilon \sim N(, \sigma^2_{\epsilon})$$
+
+The y-intercept represents a female individual from Japan with 0 years of formal education. All the countries are indicator variables and these carry the most weight on the response variable. Gender is also categorical but having a small impact of only a -0.014 difference in male political indices, on average and holding all other variables constant. The only numerical is years of education where, on average, for every additional year of education we would expect an individual's political index to raise by 0.017, holding all other variables constant.
 
 ### Conclusion
+
+These findings would match our intuition about education where increasing years of schooling dissuades authoritarian ideology. Another point to consider is that belonging to countries generally associated to authoritarian regimes, like the PRC, Mongolia and Thailand, generally have a much greater negative effect on an individual's political ideology
+
+ANOVA conclusion analysis

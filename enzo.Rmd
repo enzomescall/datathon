@@ -55,7 +55,7 @@ gg_miss_var(clean_data)
 ```{r}
 final_data <- clean_data %>%
   mutate(country = as.factor(country)) %>%
-  mutate(urban_rural = as.factor(level3 - 1)) %>%
+  mutate(urban_rural = level3 - 1) %>%
   mutate(gender = as.factor(se002 - 1)) %>%
   mutate(age = se003a) %>%
   mutate(marital_status = as.factor(se004a - 1)) %>%
@@ -70,19 +70,11 @@ levels(final_data$country) <- c("Japan", "Hong Kong", "Korea", "China",
 ```
 
 ```{r model}
-model <- lm(avg ~ country + gender + marital_status + urban_rural + education + household_members + household_generations + subjective_status, data = final_data) %>%
+model <- lm(avg ~ country*gender + gender + education, data = final_data) %>%
   tidy() %>%
   kable(digits = 3)
 model
 ```
 
-```{r kable backward}
-int_only <- lm(avg ~ 1, data = final_data)
 
-forward_select_BIC <- step(int_only, scope = formula(model), direction = "forward", k = log(nrow(final_data)))
-
-backward_select_AIC %>%
-  tidy() %>%
-  kable(digits = 3)
-```
 
