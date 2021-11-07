@@ -1,1 +1,62 @@
-erik document
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, 
+                      message = FALSE, 
+                      fig.align = "center")
+```
+
+```{r load-packages, echo = F}
+library(tidyverse)
+library(knitr)
+library(broom)
+library(patchwork)
+library(haven)
+library(yardstick)
+library(naniar)
+library(ggpubr)
+```
+
+```{r}
+Wave1_data <- read_sav("Wave1_20170906.sav")
+Wave1_data$index <- 1:nrow(Wave1_data)
+
+predictors <- select(Wave1_data, c(country, level3, se002:se012a, se014:pgnum, index))
+```
+
+```{r}
+ideology_responses <- Wave1_data %>%
+  select(index, q121:q148)
+```
+
+```{r}
+ideology_responses[is.na(ideology_responses)] <- 100000000
+```
+
+```{r}
+na_sum <- ideology_responses %>%
+  mutate(sum = rowSums(ideology_responses[])) %>%
+  filter(sum <299999999)
+
+na_sum[na_sum > 100000] <- NA
+```
+
+```{r}
+cleaned_ideology1 <- na_sum[, -31]
+cleaned_ideology <- cleaned_ideology1[, -1]
+```
+
+```{r}
+var_iqrs <- as.data.frame(sapply(cleaned_ideology, FUN = IQR, na.rm = TRUE))
+```
+
+```{r}
+cleaned_ideology$iqr <- var_iqrs
+```
+
+```{r}
+corr_ideology <- cor(cleaned_ideology, method = c("spearman"), use = "complete.obs")
+```
+
+
+
+```{r}
+```
