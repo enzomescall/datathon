@@ -136,7 +136,7 @@ The distribution is unimodal, looks vaguely normal and doesn't have any apparent
 
 ### Data Analysis
 
-After cleaning up the data we created a linear model using the responses to questions SE001 through SE017 and then selected the most relevant predictor variables to keep in the model based off of their p-values with the threshold being $p > 0.1$.
+After cleaning up the data we created a linear model using the responses to questions SE001 through SE017 and then selected the most relevant predictor variables to keep in the model based off of their p-values with the threshold being $p > 0.05$.
 
 ```{r model}
 model <- lm(avg ~ country + gender + education, data = final_data) %>%
