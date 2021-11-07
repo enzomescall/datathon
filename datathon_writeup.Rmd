@@ -69,20 +69,20 @@ levels(final_data$country) <- c("Japan", "Hong Kong", "Korea", "China",
                           "Mongolia", "Philippines", "Taiwan", "Thailand")
 ```
 
-#### Introduction
+### Introduction
 
-Our group was interested in section P of the questionnaire where individuals were asked a series of political questions and responded with their opinions. The data set provides information about the material conditions, and their perceived material conditions, of the surveyed and thus allows us to attempt to estimate the impact of an individual's material conditions on their political leanings. Notably, all the questions in section P are on a scale of 1 - 4 where answering 1 indicates support of a larger authoritarian government while answering 4.
+Immediately after going over the data set our group was interested in section P of the questionnaire where individuals were asked a series of intense political questions and responded with their opinions. This provides a unique subjective insight of a population's perspective on their civic space. The data set provides information about the material conditions, and their perceived material conditions, of the surveyed and thus allows us to attempt to estimate the impact of an individual's material conditions on their political leanings. Notably, all the questions in section P are on a scale of 1 - 4 where answering 1 indicates support of a larger authoritarian government while answering 4.
 
-## Research Question
+#### Research Question
 
 To what extent do an individual's material conditions affect their leanings toward authoritarian form of government?
 
 
-#### Methodology
+### Methodology
 
 To measure an individual's political leanings based off of their answers from the questionnaire we took their responses from questions q121 to q148 which scale from 1 to 4 and took the arithmetic mean across all questions.
 
-#### Exploratory Data Analysis
+### Exploratory Data Analysis
 
 ```{r}
 ggplot(data = final_data, aes(x = avg)) +
@@ -94,6 +94,6 @@ ggplot(data = final_data, aes(x = avg)) +
 
 The distribution is unimodal, looks normal and doesn't have any apparent outliers.
 
-#### Data Analysis
+### Data Analysis
 
-#### Conclusion
+### Conclusion
