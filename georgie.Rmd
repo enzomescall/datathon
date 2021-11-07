@@ -10,12 +10,16 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r load-packages, echo = F}
+library(labelled)
 library(tidyverse)
 library(knitr)
 library(broom)
 library(patchwork)
+library(haven)
 library(yardstick)
-library(labelled)
+library(naniar)
+library(ggpubr)
+library(ggcorrplot)
 ```
 
 ```{r}
@@ -154,6 +158,50 @@ clean_data %>%
   geom_jitter(alpha = 0.2)
 ```
 
+
+
+Question correlations
+
+```{r}
+Wave1_data <- read_sav("Wave1_20170906.sav")
+Wave1_data$index <- 1:nrow(Wave1_data)
+
+predictors <- select(Wave1_data, c(country, level3, se002:se012a, se014:pgnum, index))
+
+
+ideology_responses <- Wave1_data %>%
+  select(index, q121:q148)
+
+
+ideology_responses[is.na(ideology_responses)] <- 100000000
+
+
+na_sum <- ideology_responses %>%
+  mutate(sum = rowSums(ideology_responses[])) %>%
+  filter(sum <299999999)
+
+na_sum[na_sum > 100000] <- NA
+
+
+cleaned_ideology1 <- na_sum[, -31]
+cleaned_ideology <- cleaned_ideology1[, -1]
+
+
+var_iqrs <- as.data.frame(sapply(cleaned_ideology, FUN = IQR, na.rm = TRUE))
+
+
+cleaned_ideology$iqr <- var_iqrs
+
+
+corr_ideology <- cor(cleaned_ideology, method = c("spearman"), use = "complete.obs")
+```
+
+plot
+```{r}
+ggcorrplot(corr_ideology, ggtheme = theme_bw(),
+           colors = c("#ebbb2a", "white", "#208756")) +
+  labs(title = "Correlation between questions")
+```
 
 
 
