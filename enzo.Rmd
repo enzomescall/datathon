@@ -27,15 +27,11 @@ ideology_responses <- Wave1_data %>%
 ```
 
 ```{r}
-ideology_responses[is.na(ideology_responses)] <- 100000000
+
 ```
 
 ```{r}
-na_sum <- ideology_responses %>%
-  mutate(sum = rowSums(ideology_responses[])) %>%
-  filter(sum <299999999)
-
-na_sum[na_sum > 100000] <- NA
+na_sum <- ideology_responses
 
 na_sum$avg <- rowMeans(subset(na_sum, select = c(q121:q148)), na.rm = TRUE)
 
