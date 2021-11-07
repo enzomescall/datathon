@@ -124,9 +124,10 @@ The distribution is unimodal, looks vaguely normal and doesn't have any apparent
 
 
 
-
 ### Data Analysis
 
 After cleaning up the data we created a linear model using the responses to questions SE001 through SE017
 
 ### Conclusion
+
+

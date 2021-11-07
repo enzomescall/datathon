@@ -82,7 +82,10 @@ levels(clean_data1$country) <- c("Japan", "Hong Kong", "Korea", "China",
 clean_data1 %>%
   count(gender)
 ```
-
+```{r}
+final_data %>%
+  count(se012a)
+```
 
 ```{r gender}
 clean_data1 <- clean_data %>%
@@ -115,6 +118,30 @@ model <- lm(avg ~ country + gender + age + marital_status + urban_rural + educat
 model
 ```
 ```{r}
-clean_data1 %>%
-  count(country)
+final_data <- clean_data %>%
+  mutate(country = as.factor(country)) %>%
+  mutate(urban_rural = as.factor(level3 - 1)) %>%
+  mutate(gender = as.factor(se002 - 1)) %>%
+  mutate(age = se003a) %>%
+  mutate(marital_status = as.factor(se004a - 1)) %>%
+  mutate(education = se005a) %>%
+  mutate(household_members = se008a) %>%
+  mutate(household_generations = se008b) %>%
+  mutate(subjective_status = se017) 
+
+levels(final_data$country) <- c("Japan", "Hong Kong", "Korea", "China",
+                          "Mongolia", "Philippines", "Taiwan", "Thailand")
 ```
+
+```{r model}
+model <- lm(avg ~ country + gender + marital_status + urban_rural + education + household_members + household_generations + subjective_status, data = final_data) %>%
+  tidy(conf.int = 0.95) %>%
+  kable(digits = 3)
+model
+```
+
+$avg = 2.752 - 0.284(Hong Kong) - 0.198(Korea) - 0.421(China) - 0.315(Mongolia) - 0.258(Philippines) - 0.418(Taiwan) - 0.014(gender) + 0.017(education)$
+
+Based on their low p-values, country, gender, and education are the best predictor variables for understanding the respondant's political leanings and opinions towards authoritarian governments. 
+
+Given that zero is not included in the 95%
