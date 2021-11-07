@@ -1,0 +1,377 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Datathon Writeup},
+  pdfauthor={Linda Cao, Georgie Stammer, Enzo Moraes Mescall, Erik Mendes Novak},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Datathon Writeup}
+\author{Linda Cao, Georgie Stammer, Enzo Moraes Mescall, Erik Mendes
+Novak}
+\date{2021-11-07}
+
+\begin{document}
+\maketitle
+
+\hypertarget{introduction}{%
+\subsubsection{Introduction}\label{introduction}}
+
+Immediately after going over the data set our group was interested in
+section P of the questionnaire where individuals were asked a series of
+intense political questions and responded with their opinions. This
+provides a unique subjective insight of a population's perspective on
+their civic space. The data set provides information about the material
+conditions, and their perceived material conditions, of the surveyed and
+thus allows us to attempt to estimate the impact of an individual's
+material conditions on their political leanings. Notably, all the
+questions in section P are on a scale of 1 - 4 where answering 1
+indicates support of a larger authoritarian government while answering 4
+indicates support for a more democratic form of government.
+
+\hypertarget{research-question}{%
+\paragraph{Research Question:}\label{research-question}}
+
+\emph{To what extent do an individual's material conditions affect their
+leanings toward authoritarian form of government?}
+
+\hypertarget{methodology}{%
+\subsubsection{Methodology}\label{methodology}}
+
+Our statistical intent was to construct a general linear model and have
+our response variable be some encapsulation of the answers in section P
+of the questionnaire. We settled on the simplest possibility: to sum
+each interviewee's responses to the 29 relevant questions and divide the
+result by 29, thus finding their mean political leaning. This method,
+however, works best when assuming all questions are weighed equally and
+provoke a similar spread of responses, which we could not assume. For
+one, in 29 questions it is very possible that the wording in some of
+them leads to biased results (such as a question so lopsided that
+functionally all interviewees answered to one extreme or a question so
+uncontroversial that functionally all answered the same). Similarly,
+questions could be phrased similarly or cover similar roles such that
+their responses would be highly correlated, even if all questions are
+ostensibly independent of one another. Thus, a two-step approach was
+taken to increase confidence in our necessary assumptions.
+
+Firstly, we calculated the median and interquartile range (IQR) of the
+responses for each question. These choices were made because each
+question uses a Likert scale, meaning answers are discrete and ordinal.
+In this scenario, the spacing between answer options cannot be
+effectively calculated, so using the median for a measure of centrality
+sidesteps any spacing inconsistencies; a similar rationale applies to
+the IQR.
+
+From those calculations, all but three questions had an IQR of 1 and a
+median at 2 or 3. An IQR of 1 indicates that the question had reasonable
+but not polarizing spread, and thus a more all-filling distribution. A
+median of 2 or 3 indicates that the population, generally, did not hold
+a lopsided opinion on the issue. The three questions that did not fit
+this context were questions 123, 125 and 147a. 123 had a median of 4,
+indicating that at least half the responders felt strongly about it, and
+thus the question becomes incapable of capturing nuance. 125 had an IQR
+of 2, indicating that proportionately fewer respondents had a mild
+response to it, with many more answering a 1 or a 4. Finally, question
+147a had an IQR of 0, indicating that over half the responders answered
+the same, also indicating very little spread of opinions. All these
+discrepancies lead to questions that do not capture nuance and may in
+fact weigh answers such that not all questions hold uniform weight. For
+example, the question where the median was 4 would weigh all
+respondents' answers toward the more authoritative side, as it was
+unable to capture any gradation in opinions. Thus, we removed questions
+123, 125 and 147a from our calculation.
+
+Then, we considered the possibility that some questions might have been
+measuring equivalent components in respondents' political inclinations.
+It is undeniable that one's political inclination is a multifaceted and
+complex viewpoint, such that even seemingly different questions may in
+fact elucidate preferences that are in fact fundamentally similar. That
+is, though each question was independent, some could be highly
+correlated with others. If so, we would effectively be measuring a
+particular facet of one's political inclination twice, thereby assigning
+it excess weight in the calculation of an average. To combat this, we
+calculated the correlation coefficient for all pair choices given the
+remaining 26 questions. We used the Spearman rho correlation coefficient
+given the ordinal monotonic nature of the data, as this choice is more
+natural for discrete data with intangible option spacing. We set the
+threshold after which we would consider questions too correlated at
+0.38, because we wanted to ensure all remaining questions were at most
+weakly correlated. Literature often claims anything above 0.4 is at
+least moderately correlated, so we left some buffer and set it at 0.38.
+
+There were 4 pairs flagged: 121 and 124, 128 and 129, 131 and 133, and
+133 and 134. The remaining task was to decide which of these questions
+to remove and which to keep. Because 134 and 131 did not meet the
+threshold in their correlation, it was sensible to remove 133, thereby
+removing two problematic pairs already. For the remaining two pairs, we
+calculated the mean correlation coefficient between each question and
+all other questions (so, from the 26 questions, we only did not sum its
+correlation with itself, which is always 1, or the pair's correlation,
+flagged as too high). The mean correlations were as follows: 121 --
+0.119662228, 124 -- 0.12142794, 128 -- 0.103254203, 129 -- 0.103928434.
+Clearly, keeping 121 was better; finally, though very close, 128 edged
+out 129.
+
+It is important to note we were not interested in multicollinearity in
+general, hence why we did not use VIF. This is because even if one set
+of answers could be written as a long linear combination of other
+answers, we thought this relationship would be sufficiently distinct
+such that these questions would still be measuring fundamentally
+different facets about a respondent's political inclinations. Meanwhile,
+as an example, questions 121 and 124 had very similar wordings and
+concepts, as follows: {[}INSERT WORDING FOR THESE TWO QUESTIONS HERE{]}.
+
+Having removed these 6 questions, and having 23 remaining, we felt
+substantially more confident in our assumption that for the mean
+political inclination of each respondent we could simply take the
+unweighted sum of all their responses.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggcorrplot}\NormalTok{(corr\_ideology, }\AttributeTok{ggtheme =} \FunctionTok{theme\_bw}\NormalTok{(), }\AttributeTok{tl.cex =} \DecValTok{6}\NormalTok{,}
+           \AttributeTok{colors =} \FunctionTok{c}\NormalTok{(}\StringTok{"\#ebbb2a"}\NormalTok{, }\StringTok{"white"}\NormalTok{, }\StringTok{"\#208756"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Correlation between questions"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{datathon_writeup_files/figure-latex/correlation-1} \end{center}
+
+Next we look at the aforementioned questions in section P.
+
+\hypertarget{exploratory-data-analysis}{%
+\subsubsection{Exploratory Data
+Analysis}\label{exploratory-data-analysis}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ final\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ avg)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{fill =} \StringTok{"\#208756"}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{, }\AttributeTok{bins =} \DecValTok{40}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Distribution of Political Leanings Index"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Political Leaning Index Value"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Count"}\NormalTok{)  }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{datathon_writeup_files/figure-latex/unnamed-chunk-2-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(learning\_index, }\AttributeTok{digits =} \DecValTok{3}\NormalTok{,}
+      \AttributeTok{caption =} \StringTok{"Summary Statistics for Learning Index"}\NormalTok{,}
+      \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Mean"}\NormalTok{, }\StringTok{"Max"}\NormalTok{, }\StringTok{"Median"}\NormalTok{, }\StringTok{"Min"}\NormalTok{, }\StringTok{"IQR"}\NormalTok{, }\StringTok{"SD"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}rrrrrr@{}}
+\caption{Summary Statistics for Learning Index}\tabularnewline
+\toprule
+Mean & Max & Median & Min & IQR & SD \\
+\midrule
+\endfirsthead
+\toprule
+Mean & Max & Median & Min & IQR & SD \\
+\midrule
+\endhead
+2.613 & 3.926 & 2.593 & 1.333 & 0.415 & 0.33 \\
+\bottomrule
+\end{longtable}
+
+The distribution is unimodal, looks vaguely normal and doesn't have any
+apparent outliers.
+
+\hypertarget{data-analysis}{%
+\subsubsection{Data Analysis}\label{data-analysis}}
+
+After cleaning up the data we created a linear model using the responses
+to questions SE001 through SE017 and then selected the most relevant
+predictor variables to keep in the model based off of their p-values
+with the threshold being \(p > 0.1\).
+
+\textless\textless\textless\textless\textless\textless\textless{} HEAD
+\#\#\# Data Analysis =======
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(avg }\SpecialCharTok{\textasciitilde{}}\NormalTok{ country }\SpecialCharTok{+}\NormalTok{ gender }\SpecialCharTok{+}\NormalTok{ education, }\AttributeTok{data =}\NormalTok{ final\_data) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tidy}\NormalTok{(}\AttributeTok{conf.int =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{kable}\NormalTok{(}\AttributeTok{digits =} \DecValTok{3}\NormalTok{, }\AttributeTok{title =} \StringTok{"Linear Regression Model for Political Index"}\NormalTok{)}
+\NormalTok{model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\toprule
+term & estimate & std.error & statistic & p.value & conf.low &
+conf.high \\
+\midrule
+\endhead
+(Intercept) & 2.767 & 0.014 & 202.361 & 0.000 & 2.740 & 2.794 \\
+countryHong Kong & -0.296 & 0.014 & -21.311 & 0.000 & -0.324 & -0.269 \\
+countryKorea & -0.204 & 0.011 & -18.378 & 0.000 & -0.225 & -0.182 \\
+countryChina & -0.473 & 0.012 & -38.357 & 0.000 & -0.497 & -0.449 \\
+countryMongolia & -0.430 & 0.012 & -35.948 & 0.000 & -0.454 & -0.407 \\
+countryPhilippines & -0.327 & 0.012 & -27.324 & 0.000 & -0.350 &
+-0.304 \\
+countryTaiwan & -0.268 & 0.012 & -22.565 & 0.000 & -0.291 & -0.245 \\
+countryThailand & -0.436 & 0.012 & -36.208 & 0.000 & -0.460 & -0.412 \\
+gender & -0.014 & 0.006 & -2.396 & 0.017 & -0.025 & -0.003 \\
+education & 0.016 & 0.001 & 19.557 & 0.000 & 0.014 & 0.017 \\
+\bottomrule
+\end{longtable}
+
+Which we may represent in the equation:
+
+\[ \hat{PolIndex} = 2.767 - 0.296 ~ countryHK ~ - 0.204 ~ countryKO - 0.473 ~ countryCN ~ - 0.430 ~countryMN ~ \]
+\[ - 0.327 ~ countryPH ~ - 0.268 ~ countryTW ~ - 0.014 ~ gender + 0.016 ~ education ~ + \epsilon_i, \hspace{10mm} \epsilon \sim N(, \sigma^2_{\epsilon})\]
+
+The y-intercept represents a female individual from Japan with 0 years
+of formal education. All the countries are indicator variables and these
+carry the most weight on the response variable. Gender is also
+categorical but having a small impact of only a -0.014 difference in
+male political indices, on average and holding all other variables
+constant. The only numerical is years of education where, on average,
+for every additional year of education we would expect an individual's
+political index to raise by 0.017, holding all other variables constant.
+
+\hypertarget{conclusion}{%
+\subsubsection{Conclusion}\label{conclusion}}
+
+\begin{quote}
+\begin{quote}
+\begin{quote}
+\begin{quote}
+\begin{quote}
+\begin{quote}
+\begin{quote}
+cf9706b59bc9b02b5d2f07d42c19192ca3d436b8
+\end{quote}
+\end{quote}
+\end{quote}
+\end{quote}
+\end{quote}
+\end{quote}
+\end{quote}
+
+These findings would match our intuition about education where
+increasing years of schooling dissuades authoritarian ideology. Another
+point to consider is that belonging to countries generally associated to
+authoritarian regimes, like the PRC, Mongolia and Thailand, generally
+have a much greater negative effect on an individual's political
+ideology
+
+\textless\textless\textless\textless\textless\textless\textless{} HEAD
+\#\#\# Conclusion
+
+======= ANOVA conclusion analysis
+\textgreater\textgreater\textgreater\textgreater\textgreater\textgreater\textgreater{}
+cf9706b59bc9b02b5d2f07d42c19192ca3d436b8
+
+\end{document}
