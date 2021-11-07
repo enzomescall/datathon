@@ -21,6 +21,7 @@ library(broom)
 library(patchwork)
 library(haven)
 library(yardstick)
+library(ggcorrplot)
 ```
 
 ```{r load-data, include= FALSE}
@@ -33,7 +34,7 @@ predictors <- select(Wave1_data, c(country, level3,
 
 ```{r clean-data, include= FALSE}
 ideology_responses <- Wave1_data %>%
-  select(index, q121, q122, q126:q128, q130:q132, q134:q147, q148)
+  select(index, q121:q148)
 
 # This is our janky method of removing responses which failed to answer more
 # than 4 questions
@@ -45,9 +46,15 @@ na_sum <- ideology_responses %>%
 
 na_sum[na_sum > 100000] <- NA
 
-na_sum$avg <- rowMeans(subset(na_sum, select = c(q121:q148)), na.rm = TRUE)
+cleaned_ideology_0 <- na_sum[, -31]
+cleaned_ideology <- cleaned_ideology_0[, -1]
 
-average_ideology <- select(na_sum, c(index, avg))
+added_avg <- na_sum %>%
+  select(index, q121, q122, q126:q128, q130:q132, q134:q147, q148)
+
+added_avg$avg <- rowMeans(subset(na_sum, select = c(q121:q148)), na.rm = TRUE)
+
+average_ideology <- select(added_avg, c(index, avg))
 
 clean_data <- inner_join(average_ideology, predictors, by = "index")
 ```
@@ -80,9 +87,18 @@ To what extent do an individual's material conditions affect their leanings towa
 
 ### Methodology
 
-To measure an individual's political leanings based off of their answers from the questionnaire we took their responses from questions Q121 to Q148 which scale from 1 to 4 and took the arithmetic mean across all questions.
+To measure an individual's political leanings based off of their answers from the questionnaire we took their responses from questions Q121 to Q148 which scale from 1 to 4 and took the arithmetic mean across selected questions.
 
 //space for erik
+```{r correlation}
+corr_ideology <- cor(cleaned_ideology, method = c("spearman"), use = "complete.obs")
+
+ggcorrplot(corr_ideology, ggtheme = theme_bw(), tl.cex = 8,
+           colors = c("#ebbb2a", "white", "#208756")) +
+  labs(title = "Correlation between questions")
+```
+
+Next we look at the aforementioned questions in section P. 
 
 ### Exploratory Data Analysis
 
@@ -104,7 +120,10 @@ kable(learning_index, digits = 3,
       col.names = c("Mean", "Max", "Median", "Min", "IQR", "SD"))
 ```
 
-The distribution is unimodal, looks normal and doesn't have any apparent outliers.
+The distribution is unimodal, looks vaguely normal and doesn't have any apparent outliers.
+
+
+
 
 ### Data Analysis
 
