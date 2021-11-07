@@ -27,11 +27,15 @@ ideology_responses <- Wave1_data %>%
 ```
 
 ```{r}
-
+ideology_responses[is.na(ideology_responses)] <- 100000000
 ```
 
 ```{r}
-na_sum <- ideology_responses
+na_sum <- ideology_responses %>%
+  mutate(sum = rowSums(ideology_responses[])) %>%
+  filter(sum <499999999)
+
+na_sum[na_sum > 100000] <- NA
 
 na_sum$avg <- rowMeans(subset(na_sum, select = c(q121:q148)), na.rm = TRUE)
 
@@ -54,7 +58,7 @@ final_data <- clean_data %>%
   mutate(country = as.factor(country)) %>%
   mutate(urban_rural = as.factor(level3 - 1)) %>%
   mutate(gender = as.factor(se002 - 1)) %>%
-  mutate(age = se003a) %>%
+  #mutate(age = se003a) %>%
   mutate(marital_status = as.factor(se004a - 1)) %>%
   mutate(education = se005a) %>%
   mutate(household_members = se008a) %>%
@@ -69,7 +73,7 @@ levels(final_data$country) <- c("Japan", "Hong Kong", "Korea", "China",
 ```
 
 ```{r model}
-model <- lm(avg ~ country + gender + marital_status + urban_rural + age + education + household_members + household_generations + subjective_status + religion, data = final_data) %>%
+model <- lm(avg ~ country + gender + marital_status + urban_rural + education + household_members + household_generations + subjective_status + religion, data = final_data) %>%
   tidy() %>%
   kable(digits = 3)
 model
