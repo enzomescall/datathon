@@ -155,3 +155,22 @@ model <- lm(avg ~ country + gender + education, data = final_data) %>%
 reduced_model <- lm(avg ~ country + gender, data = final_data)
 anova(reduced_model, model, data = final_data)
 ```
+
+```{r}
+head(final_data)
+```
+
+```{r}
+mean(final_data$avg)
+```
+
+```{r}
+anova(lm(avg ~ country + gender + education, data = final_data)) %>%
+  tidy() %>%
+  kable(digits = 3, caption = "ANOVA of Linear Regression Model")
+```
+
+```{r}
+summary(lm(avg ~ country + gender + education, data = final_data))
+
+```
