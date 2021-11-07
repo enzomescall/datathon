@@ -158,6 +158,7 @@ anova(lm(avg ~ country + gender + education, data = final_data)) %>%
   tidy() %>%
   kable(digits = 3, caption = "ANOVA of Linear Regression Model")
 ```
+According to the ANOVA table, all predictor values have a very low p-value, indicating that they are statistically significant to the model. However, the model has an adjusted $R^2$ value of 0.2876, even with a large F-statistic and low p-value. Therefore, we can conclude that this model is statistically significant but may not be best represented by linear regression. 
 
 \newpage
 ### Appendix A
@@ -231,4 +232,8 @@ levels(final_data$country) <- c("Japan", "Hong Kong", "Korea", "China",
 linear_model <- lm(avg ~ country + gender + education, data = final_data) %>%
   tidy(conf.int = TRUE) %>%
   kable(digits = 3, title = "Linear Regression Model for Political Index")
+```
+
+```{r adjusted R squared calculation}
+summary(lm(avg ~ country + gender + education, data = final_data))
 ```
