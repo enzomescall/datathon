@@ -88,14 +88,20 @@ To measure an individual's political leanings based off of their answers from th
 
 ```{r}
 ggplot(data = final_data, aes(x = avg)) +
-  geom_histogram(fill = "lightblue", color = "black", bins = 40) +
+  geom_histogram(fill = "#208756", color = "black", bins = 40) +
   labs(title = "Distribution of Political Leanings Index",
        x = "Political Leaning Index Value",
-       y = "Count")
+       y = "Count")  +
+  theme_bw()
+```
+```{r, include = FALSE}
+learning_index <- data.frame(mean(final_data$avg), max(final_data$avg), median(final_data$avg), min(final_data$avg), IQR(final_data$avg), sd(final_data$avg))
 ```
 
 ```{r}
-summarise(final_data$avg)
+kable(learning_index, digits = 3,
+      caption = "Summary Statistics for Learning Index",
+      col.names = c("Mean", "Max", "Median", "Min", "IQR", "SD"))
 ```
 
 The distribution is unimodal, looks normal and doesn't have any apparent outliers.
