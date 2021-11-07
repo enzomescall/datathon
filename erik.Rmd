@@ -13,6 +13,7 @@ library(haven)
 library(yardstick)
 library(naniar)
 library(ggpubr)
+library(corrplot)
 ```
 
 ```{r}
@@ -46,17 +47,21 @@ cleaned_ideology <- cleaned_ideology1[, -1]
 
 ```{r}
 var_iqrs <- as.data.frame(sapply(cleaned_ideology, FUN = IQR, na.rm = TRUE))
+var_median <- as.data.frame(sapply(cleaned_ideology, FUN = median, na.rm = TRUE))
+var_total <- var_iqrs
+var_total$median <- var_median
 ```
 
 ```{r}
-cleaned_ideology$iqr <- var_iqrs
 ```
 
 ```{r}
-corr_ideology <- cor(cleaned_ideology, method = c("spearman"), use = "complete.obs")
+final_cleaned_ideology1 <- cleaned_ideology[, -3]
+final_cleaned_ideology2 <- final_cleaned_ideology1[, -4]
+final_cleaned_ideology <- final_cleaned_ideology2[, -26]
 ```
 
-
-
 ```{r}
+corr_ideology <- cor(final_cleaned_ideology, method = c("spearman"), use = "complete.obs")
+corrplot(corr_ideology)
 ```
