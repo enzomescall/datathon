@@ -4,8 +4,8 @@ author: "Linda Cao, Georgie Stammer, Enzo Moraes Mescall, Erik Mendes Novak"
 date: "`r Sys.Date()`"
 output: 
   pdf_document: 
-    fig_height: 4
-    fig_width: 6
+    fig_height: 3
+    fig_width: 4
 ---
 
 ```{r setup, include = FALSE}
@@ -33,7 +33,7 @@ predictors <- select(Wave1_data, c(country, level3,
 
 ```{r clean-data, include= FALSE}
 ideology_responses <- Wave1_data %>%
-  select(index, q121:q148)
+  select(index, q121, q122, q126:q128, q130:q132, q134:q147, q148)
 
 # This is our janky method of removing responses which failed to answer more
 # than 4 questions
@@ -80,7 +80,9 @@ To what extent do an individual's material conditions affect their leanings towa
 
 ### Methodology
 
-To measure an individual's political leanings based off of their answers from the questionnaire we took their responses from questions q121 to q148 which scale from 1 to 4 and took the arithmetic mean across all questions.
+To measure an individual's political leanings based off of their answers from the questionnaire we took their responses from questions Q121 to Q148 which scale from 1 to 4 and took the arithmetic mean across all questions.
+
+//space for erik
 
 ### Exploratory Data Analysis
 
@@ -92,8 +94,14 @@ ggplot(data = final_data, aes(x = avg)) +
        y = "Count")
 ```
 
+```{r}
+summarise(final_data$avg)
+```
+
 The distribution is unimodal, looks normal and doesn't have any apparent outliers.
 
 ### Data Analysis
+
+After cleaning up the data we created a linear model using the responses to questions SE001 through SE017
 
 ### Conclusion
