@@ -1,5 +1,5 @@
 ---
-title: "Datathon Writeup"
+title: "Duke Datathon Writeup"
 author: "Linda Cao, Georgie Stammer, Enzo Moraes Mescall, Erik Mendes Novak"
 date: "`r Sys.Date()`"
 output: 
@@ -87,19 +87,13 @@ Immediately after going over the data set our group was interested in section P 
 ### Methodology
 
 Our statistical intent was to construct a general linear model and have our response variable be some encapsulation of the answers in section P of the questionnaire. We settled on the simplest possibility: to sum each interviewee’s responses to the 29 relevant questions and divide the result by 29, thus finding their mean political leaning. 
-This method, however, works best when assuming all questions are weighed equally and provoke a similar spread of responses, which we could not assume. For one, in 29 questions it is very possible that the wording in some of them leads to biased results (such as a question so lopsided that functionally all interviewees answered to one extreme or a question so uncontroversial that functionally all answered the same). Similarly, questions could be phrased similarly or cover similar roles such that their responses would be highly correlated, even if all questions are ostensibly independent of one another. Thus, a two-step approach was taken to increase confidence in our necessary assumptions. 
+This method, however, works best when assuming all questions are weighed equally and provoke a similar spread of responses, which we could not assume. For one, in 29 questions it is very possible that the wording in some of them leads to biased results. Similarly, questions could be phrased similarly or cover similar roles such that their responses would be highly correlated, even if all questions are ostensibly independent. Thus, a two-step approach was taken to increase confidence in our necessary assumptions. 
 
 Firstly, we calculated the median and interquartile range (IQR) of the responses for each question. These choices were made because each question uses a Likert scale, meaning answers are discrete and ordinal. In this scenario, the spacing between answer options cannot be effectively calculated, so using the median for a measure of centrality sidesteps any spacing inconsistencies; a similar rationale applies to the IQR.
 
-From those calculations, all but three questions had an IQR of 1 and a median at 2 or 3. An IQR of 1 indicates that the question had reasonable but not polarizing spread, and thus a more all-filling distribution.  A median of 2 or 3 indicates that the population, generally, did not hold a lopsided opinion on the issue. The three questions that did not fit this context were questions 123, 125 and 147a. 123 had a median of 4, indicating that at least half the responders felt strongly about it, and thus the question becomes incapable of capturing nuance. 125 had an IQR of 2, indicating that proportionately fewer respondents had a mild response to it, with many more answering a 1 or a 4. Finally, question 147a had an IQR of 0, indicating that over half the responders answered the same, also indicating very little spread of opinions. All these discrepancies lead to questions that do not capture nuance and may in fact weigh answers such that not all questions hold uniform weight. For example, the question where the median was 4 would weigh all respondents’ answers toward the more authoritative side, as it was unable to capture any gradation in opinions. Thus, we removed questions 123, 125 and 147a from our calculation.
+From those calculations, all but three questions had an IQR of 1 and a median at 2 or 3. An IQR of 1 indicates that the question had reasonable but not polarizing spread, and thus a more all-filling distribution.  A median of 2 or 3 indicates that the population, generally, did not hold a lopsided opinion on the issue. The three questions that did not fit this context were questions 123, 125 and 147a. 123 had a median of 4, indicating that at least half the respondents felt strongly about it, and thus the question becomes incapable of capturing nuance. 125 had an IQR of 2, indicating that proportionately fewer respondents had a mild response to it, with many more answering a 1 or a 4. Finally, question 147a had an IQR of 0, indicating that over half the respondents answered the same, also indicating very little spread of opinions.
 
 Then, we considered the possibility that some questions might have been measuring equivalent components in respondents’ political inclinations. It is undeniable that one’s political inclination is a multifaceted and complex viewpoint, such that even seemingly different questions may in fact elucidate preferences that are in fact fundamentally similar. That is, though each question was independent, some could be highly correlated with others. If so, we would effectively be measuring a particular facet of one’s political inclination twice, thereby assigning it excess weight in the calculation of an average. To combat this, we calculated the correlation coefficient for all pair choices given the remaining 26 questions. We used the Spearman rho correlation coefficient given the ordinal monotonic nature of the data, as this choice is more natural for discrete data with intangible option spacing. We set the threshold after which we would consider questions too correlated at 0.38, because we wanted to ensure all remaining questions were at most weakly correlated. Literature often claims anything above 0.4 is at least moderately correlated, so we left some buffer and set it at 0.38.
-
-There were 4 pairs flagged: 121 and 124, 128 and 129, 131 and 133, and 133 and 134. The remaining task was to decide which of these questions to remove and which to keep. Because 134 and 131 did not meet the threshold in their correlation, it was sensible to remove 133, thereby removing two problematic pairs already. For the remaining two pairs, we calculated the mean correlation coefficient between each question and all other questions (so, from the 26 questions, we only did not sum its correlation with itself, which is always 1, or the pair’s correlation, flagged as too high). The mean correlations were as follows: 121 -- 0.119662228, 124 -- 0.12142794, 128 -- 0.103254203, 129 -- 0.103928434. Clearly, keeping 121 was better; finally, though very close, 128 edged out 129.
-
-It is important to note we were not interested in multicollinearity in general, hence why we did not use VIF. This is because even if one set of answers could be written as a long linear combination of other answers, we thought this relationship would be sufficiently distinct such that these questions would still be measuring fundamentally different facets about a respondent’s political inclinations. Meanwhile, as an example, questions 121 and 124 had very similar wordings and concepts, as follows: [INSERT WORDING FOR THESE TWO QUESTIONS HERE].
-
-Having removed these 6 questions, and having 23 remaining, we felt substantially more confident in our assumption that for the mean political inclination of each respondent we could simply take the unweighted sum of all their responses.
 
 ```{r, include = FALSE}
 corr_ideology <- cor(cleaned_ideology, method = c("spearman"), use = "complete.obs")
@@ -110,7 +104,11 @@ ggcorrplot(corr_ideology, ggtheme = theme_bw(), tl.cex = 6,
   labs(title = "Correlation between questions")
 ```
 
-Next we look at the aforementioned questions in section P. 
+There were 4 pairs flagged: 121 and 124, 128 and 129, 131 and 133, and 133 and 134. The remaining task was to decide which of these questions to remove and which to keep. Because 134 and 131 did not meet the threshold in their correlation, it was sensible to remove 133, thereby removing two problematic pairs already. For the remaining two pairs, we calculated the mean correlation coefficient between each question and all other questions (so, from the 26 questions, we only did not sum its correlation with itself, which is always 1, or the pair’s correlation, flagged as too high). The mean correlations were as follows: 121 -- 0.119662228, 124 -- 0.12142794, 128 -- 0.103254203, 129 -- 0.103928434. Clearly, keeping 121 was better; finally, though very close, 128 edged out 129.
+
+It is important to note we were not interested in multicollinearity in general, hence why we did not use VIF. This is because even if one set of answers could be written as a long linear combination of other answers, we thought this relationship would be sufficiently distinct such that these questions would still be measuring fundamentally different facets about a respondent’s political inclinations. Meanwhile, as an example, questions 121 and 124 had very similar wordings and concepts, as follows: [INSERT WORDING FOR THESE TWO QUESTIONS HERE].
+
+Having removed these 6 questions, and having 23 remaining, we felt substantially more confident in our assumption that for the mean political inclination of each respondent we could simply take the unweighted sum of all their responses
 
 ### Exploratory Data Analysis
 
@@ -136,22 +134,101 @@ The distribution is unimodal, looks vaguely normal and doesn't have any apparent
 
 ### Data Analysis
 
-After cleaning up the data we created a linear model using the responses to questions SE001 through SE017 and then selected the most relevant predictor variables to keep in the model based off of their p-values with the threshold being $p > 0.1$.
+After cleaning up the data we created a linear model using the responses to questions SE001 through SE017 and then selected the most relevant predictor variables to keep in the model based off of their p-values with the threshold being $p > 0.05$. We iterated through the predictors removing the entries with the highest p-value and re-running regression until arriving at the following model:
 
 ```{r model}
-model <- lm(avg ~ country + gender + education, data = final_data) %>%
+linear_model <- lm(avg ~ country + gender + education, data = final_data) %>%
   tidy(conf.int = TRUE) %>%
-  kable(digits = 3, title = "Linear Regression Model for Political Index")
-model
+  kable(digits = 3, caption = "Linear Regression Model for Political Index")
+linear_model
 ```
 
 Which we may represent in the equation:
-
-$$ \hat{PolIndex} = 2.767 - 0.296 ~ countryHK ~ - 0.204 ~ countryKO - 0.473 ~ countryCN ~ - 0.430 ~countryMN ~ $$
-$$ - 0.327 ~ countryPH ~ - 0.268 ~ countryTW ~ - 0.014 ~ gender + 0.016 ~ education ~ + \epsilon_i, \hspace{10mm} \epsilon \sim N(, \sigma^2_{\epsilon})$$
+$$ \hat{PolIndex} = 2.767 - 0.296 ~ countryHK_i ~ - 0.204 ~ countryKO_i - 0.473 ~ countryCN_i ~ - 0.430 ~countryMN_i ~ $$
+$$ - 0.327 ~ countryPH_i ~ - 0.268 ~ countryTW_i ~ - 0.014_i ~ gender_i + 0.016 ~ education_i ~ + \epsilon_i, \hspace{10mm} \epsilon \sim N(, \sigma^2_{\epsilon})$$
 
 The y-intercept represents a male individual from Japan with 0 years of formal education. All the countries are indicator variables and these carry the most weight on the response variable. Given that zero is not included in any of the countries' confidence intervals, we are 95% confident that the average political index for each country is not the same. Gender is also categorical but having a small impact of only a -0.014 difference in female political indices and we are 95% confident that the political index for males differs from -0.025	to -0.003 compared to females, holding all other predictor variables constant. The only numerical is years of education where we are 95% confident that for every additional year in education, the respondent's political index increases by 0.014 to 0.017, holding all other predictor variables constant. 
 
 ### Conclusion
 
-These findings would match our intuition about education where increasing years of schooling dissuades authoritarian ideology. Another point to consider is that belonging to countries generally associated to authoritarian regimes, like the PRC, Mongolia and Thailand, generally have a much greater negative effect on an individual's political ideology
+These findings would match our intuition about education where increasing years of schooling dissuades authoritarian ideology. Another point to consider is that belonging to countries generally associated to authoritarian regimes, like the PRC, Mongolia and Thailand, generally have a much greater negative effect on an individual's political ideology than belonging to Japan or Korea.
+
+```{r}
+anova(lm(avg ~ country + gender + education, data = final_data)) %>%
+  tidy() %>%
+  kable(digits = 3, caption = "ANOVA of Linear Regression Model")
+```
+
+\newpage
+### Appendix A
+
+```{r, eval = FALSE}
+library(tidyverse)
+library(knitr)
+library(broom)
+library(patchwork)
+library(haven)
+library(yardstick)
+library(ggcorrplot)
+```
+
+```{r, eval = FALSE}
+Wave1_data <- read_sav("Wave1_20170906.sav")
+Wave1_data$index <- 1:nrow(Wave1_data)
+
+predictors <- select(Wave1_data, c(country, level3,
+                                   se002:se012a, se014:pgnum, index))
+```
+
+```{r, eval = FALSE}
+ideology_responses <- Wave1_data %>%
+  select(index, q121:q148)
+
+# This is our janky method of removing responses which failed to answer more
+# than 4 questions by turning NAs into huge numbers and removing entries with
+# sums greater than 4.9 million, indicating that they had 5 or more NAs.
+# We chose 5 NAs because otherwise most of the Chinese and Thai data gets
+# removed.
+ideology_responses[is.na(ideology_responses)] <- 100000000
+
+na_sum <- ideology_responses %>%
+  mutate(sum = rowSums(ideology_responses[])) %>%
+  filter(sum <499999999)
+
+na_sum[na_sum > 100000] <- NA
+
+cleaned_ideology_0 <- na_sum[, -31]
+cleaned_ideology <- cleaned_ideology_0[, -1]
+
+# removing rows using the methodology explained
+added_avg <- na_sum %>%
+  select(index, q121, q122, q126:q128, q130:q132, q134:q147, q148)
+
+added_avg$avg <- rowMeans(subset(na_sum, select = c(q121:q148)), na.rm = TRUE)
+
+# calculating the political index
+average_ideology <- select(added_avg, c(index, avg))
+
+clean_data <- inner_join(average_ideology, predictors, by = "index")
+```
+
+```{r, eval = FALSE}
+final_data <- clean_data %>%
+  mutate(country = as.factor(country)) %>%
+  mutate(urban_rural = level3 - 1) %>%
+  mutate(gender = se002 - 1) %>%
+  mutate(age = se003a) %>%
+  mutate(marital_status = as.factor(se004a - 1)) %>%
+  mutate(education = se005a) %>%
+  mutate(household_members = se008a) %>%
+  mutate(household_generations = se008b) %>%
+  mutate(subjective_status = se017) %>%
+  mutate(religion = case_when(se006 == 11 ~ 0, se006 < 11 ~ 1))
+
+levels(final_data$country) <- c("Japan", "Hong Kong", "Korea", "China",
+                          "Mongolia", "Philippines", "Taiwan", "Thailand")
+
+linear_model <- lm(avg ~ country + gender + education, data = final_data) %>%
+  tidy(conf.int = TRUE) %>%
+  kable(digits = 3, title = "Linear Regression Model for Political Index")
+```
